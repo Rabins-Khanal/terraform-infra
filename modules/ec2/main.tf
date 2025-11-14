@@ -1,4 +1,4 @@
-
+#
 resource "aws_security_group" "ec2_sg" {
   name        = "terraformrnd-ec2-sg-${var.environment}"
   description = "EC2 security group"
