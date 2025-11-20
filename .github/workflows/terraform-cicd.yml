@@ -16,9 +16,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # Set AWS credentials
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -27,11 +29,13 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
+      # Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.13.5
 
+      # Determine environment
       - name: Determine environment
         id: env
         run: |
@@ -44,14 +48,34 @@ jobs:
           fi
           echo "Using environment: ${{ env.ENV }}"
 
+      # Terraform formatting check
+      - name: Terraform Fmt Check
+        working-directory: envs/${{ env.ENV }}
+        run: |
+          echo "Checking Terraform formatting..."
+          terraform fmt -check -recursive
+
+      # Install Checkov
+      - name: Install Checkov
+        run: pip install checkov
+
+      # Run Checkov scan
+      - name: Run Checkov
+        run: |
+          echo "Running Checkov security/compliance scan..."
+          checkov -d ./envs/${{ env.ENV }}
+
+      # Terraform Init
       - name: Terraform Init
         working-directory: envs/${{ env.ENV }}
         run: terraform init -input=false
 
+      # Terraform Plan
       - name: Terraform Plan
         working-directory: envs/${{ env.ENV }}
         run: terraform plan -out=tfplan
 
+      # Terraform Apply
       - name: Terraform Apply
         working-directory: envs/${{ env.ENV }}
         run: terraform apply -auto-approve tfplan
