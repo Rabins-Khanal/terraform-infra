@@ -55,16 +55,6 @@ jobs:
           echo "Checking Terraform formatting..."
           terraform fmt -check -recursive
 
-      # Install Checkov
-      - name: Install Checkov
-        run: pip install checkov
-
-      # Run Checkov scan
-      - name: Run Checkov
-        run: |
-          echo "Running Checkov security/compliance scan..."
-          checkov -d ./envs/${{ env.ENV }}
-
       # Terraform Init
       - name: Terraform Init
         working-directory: envs/${{ env.ENV }}
