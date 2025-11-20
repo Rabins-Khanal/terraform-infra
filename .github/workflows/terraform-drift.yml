@@ -1,0 +1,87 @@
+name: Terraform Drift Detection
+
+on:
+  # schedule:
+    # - cron: '30 10,20 * * *'
+  workflow_dispatch:
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.0
+
+      - name: Check Drift in All Environments
+        id: drift
+        run: |
+          DRIFT_FOUND=false
+          DRIFT_MESSAGE=""
+
+          for ENV in dev staging prod; do
+            echo "===================================="
+            echo "Checking drift for $ENV..."
+            echo "===================================="
+            cd envs/$ENV
+
+            # Initialize Terraform
+            terraform init -input=false
+
+            # Run plan, show in workflow logs and save to file
+            terraform plan -out=tfplan | tee plan_output.txt
+
+            # Detect if there are changes
+            if terraform show tfplan | grep -q "No changes"; then
+              echo "No drift in $ENV"
+            else
+              echo "Drift detected in $ENV!"
+              DRIFT_FOUND=true
+              PLAN_CONTENT=$(cat plan_output.txt)
+              DRIFT_MESSAGE="$DRIFT_MESSAGE\n\n--- Drift in $ENV ---\n$PLAN_CONTENT"
+            fi
+
+            # Return to repo root
+            cd ../../
+          done
+
+          # Set outputs
+          echo "drift_found=$DRIFT_FOUND" >> $GITHUB_OUTPUT
+          echo -e "drift_message=$DRIFT_MESSAGE" >> $GITHUB_OUTPUT
+
+          # Exit if drift detected
+          if [ "$DRIFT_FOUND" = true ]; then
+            exit 1
+          fi
+
+      - name: Send Email on Drift
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "⚠️ Terraform Drift Detected!"
+          to: ${{ secrets.ALERT_EMAIL }}
+          from: "Terraform Drift Bot <${{ secrets.SMTP_USERNAME }}>"
+          secure: true
+          body: |
+            Terraform drift has been detected in the following environments:
+
+            ${{ steps.drift.outputs.drift_message }}
+
+            Check the GitHub Actions workflow logs for full Terraform plan details.
