@@ -80,8 +80,6 @@ jobs:
           from: "Terraform Drift Bot <${{ secrets.SMTP_USERNAME }}>"
           secure: true
           body: |
-            Terraform drift has been detected in the following environments:
+            Terraform drift has been detected in the following environments:${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-            ${{ steps.drift.outputs.drift_message }}
-
-            Check the GitHub Actions workflow logs for full Terraform plan details.
+            Click the above link to see the logs of the drift.
