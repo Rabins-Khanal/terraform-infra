@@ -60,21 +60,24 @@ resource "aws_internet_gateway" "this" {
   })
 }
 
-# Public Route Table
-resource "aws_route_table" "public" {
+# Public Route Tables
+resource "aws_route_table" "public1" {
   vpc_id = aws_vpc.this.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.this.id
-  }
-
   tags = merge(var.tags, {
-    Name = "terraformrnd-public-rt-${var.environment}"
+    Name = "terraformrnd-public1-rt-${var.environment}"
   })
 }
 
-#public route Tables
+resource "aws_route_table" "public2" {
+  vpc_id = aws_vpc.this.id
+
+  tags = merge(var.tags, {
+    Name = "terraformrnd-public2-rt-${var.environment}"
+  })
+}
+
+#public route Tables association
 
 resource "aws_route_table_association" "public1" {
   subnet_id      = aws_subnet.public1.id
