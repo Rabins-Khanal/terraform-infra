@@ -8,9 +8,9 @@ resource "aws_vpc" "this" {
   })
 }
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "public1" {
   vpc_id                  = aws_vpc.this.id
-  cidr_block              = var.public_subnet_cidr
+  cidr_block              = var.public_subnet1_cidr
   map_public_ip_on_launch = true
   availability_zone       = data.aws_availability_zones.available.names[0]
 
@@ -19,6 +19,16 @@ resource "aws_subnet" "public" {
   })
 }
 
+resource "aws_subnet" "public2" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = var.public_subnet2_cidr
+  map_public_ip_on_launch = true
+  availability_zone       = data.aws_availability_zones.available.names[0]
+
+  tags = merge(var.tags, {
+    Name = "terraformrnd-public-subnet-${var.environment}"
+  })
+}
 resource "aws_subnet" "private1" {
   vpc_id            = aws_vpc.this.id
   cidr_block        = var.private_subnet1_cidr
