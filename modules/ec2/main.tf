@@ -37,7 +37,7 @@ resource "aws_security_group" "ec2_sg" {
 resource "aws_instance" "ec2" {
   ami                         = var.ami_id
   instance_type               = "t2.micro"
-  subnet_id                   = var.public_subnet_id
+  subnet_id                   = var.public_subnet_ids
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true
   key_name                    = var.key_name
