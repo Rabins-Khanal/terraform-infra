@@ -8,17 +8,27 @@ resource "aws_vpc" "this" {
   })
 }
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "public1" {
   vpc_id                  = aws_vpc.this.id
-  cidr_block              = var.public_subnet_cidr
+  cidr_block              = var.public_subnet1_cidr
   map_public_ip_on_launch = true
   availability_zone       = data.aws_availability_zones.available.names[0]
 
   tags = merge(var.tags, {
-    Name = "terraformrnd-public-subnet-${var.environment}"
+    Name = "terraformrnd-public1-subnet-${var.environment}"
   })
 }
 
+resource "aws_subnet" "public2" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = var.public_subnet2_cidr
+  map_public_ip_on_launch = true
+  availability_zone       = data.aws_availability_zones.available.names[0]
+
+  tags = merge(var.tags, {
+    Name = "terraformrnd-public2-subnet-${var.environment}"
+  })
+}
 resource "aws_subnet" "private1" {
   vpc_id            = aws_vpc.this.id
   cidr_block        = var.private_subnet1_cidr
@@ -50,24 +60,33 @@ resource "aws_internet_gateway" "this" {
   })
 }
 
-# Public Route Table
-resource "aws_route_table" "public" {
+# Public Route Tables
+resource "aws_route_table" "public1" {
   vpc_id = aws_vpc.this.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.this.id
-  }
-
   tags = merge(var.tags, {
-    Name = "terraformrnd-public-rt-${var.environment}"
+    Name = "terraformrnd-public1-rt-${var.environment}"
   })
 }
 
-# Associate public route table
-resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.public.id
-  route_table_id = aws_route_table.public.id
+resource "aws_route_table" "public2" {
+  vpc_id = aws_vpc.this.id
+
+  tags = merge(var.tags, {
+    Name = "terraformrnd-public2-rt-${var.environment}"
+  })
+}
+
+#public route Tables association
+
+resource "aws_route_table_association" "public1" {
+  subnet_id      = aws_subnet.public1.id
+  route_table_id = aws_route_table.public1.id
+}
+
+resource "aws_route_table_association" "public2" {
+  subnet_id      = aws_subnet.public2.id
+  route_table_id = aws_route_table.public2.id
 }
 
 # Private Route Tables
