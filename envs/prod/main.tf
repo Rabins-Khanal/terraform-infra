@@ -41,5 +41,6 @@ locals {
     Project     = "Terraform R and D"
     Schedule    = "NP-office"
   }
+
 }
 
