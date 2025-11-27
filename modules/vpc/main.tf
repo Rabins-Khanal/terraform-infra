@@ -19,6 +19,7 @@ resource "aws_subnet" "public1" {
   })
 }
 
+
 resource "aws_subnet" "public2" {
   vpc_id                  = aws_vpc.this.id
   cidr_block              = var.public_subnet2_cidr
