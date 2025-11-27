@@ -15,7 +15,7 @@ resource "aws_subnet" "public1" {
   availability_zone       = data.aws_availability_zones.available.names[0]
 
   tags = merge(var.tags, {
-    Name = "terraformrnd-public-subnet-${var.environment}"
+    Name = "terraformrnd-public1-subnet-${var.environment}"
   })
 }
 
@@ -26,7 +26,7 @@ resource "aws_subnet" "public2" {
   availability_zone       = data.aws_availability_zones.available.names[0]
 
   tags = merge(var.tags, {
-    Name = "terraformrnd-public-subnet-${var.environment}"
+    Name = "terraformrnd-public2-subnet-${var.environment}"
   })
 }
 resource "aws_subnet" "private1" {
@@ -74,10 +74,16 @@ resource "aws_route_table" "public" {
   })
 }
 
-# Associate public route table
-resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.public.ids
-  route_table_id = aws_route_table.public.id
+#public route Tables
+
+resource "aws_route_table_association" "public1" {
+  subnet_id      = aws_subnet.public1.id
+  route_table_id = aws_route_table.public1.id
+}
+
+resource "aws_route_table_association" "public2" {
+  subnet_id      = aws_subnet.public2.id
+  route_table_id = aws_route_table.public2.id
 }
 
 # Private Route Tables
