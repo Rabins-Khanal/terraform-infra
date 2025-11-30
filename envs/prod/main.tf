@@ -18,7 +18,6 @@ module "alb" {
   environment       = var.environment
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
-  alb_sg_id         = module.vpc.alb_sg_id
   tags              = local.tags
 }
 
@@ -28,7 +27,7 @@ module "asg" {
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
   ami_id             = var.ami_id
-  alb_sg_id          = module.vpc.alb_sg_id
+  alb_sg_id          = module.alb.alb_sg_id
   tg_blue_arn        = module.alb.tg_blue_arn
   tg_green_arn       = module.alb.tg_green_arn
   tags               = local.tags
