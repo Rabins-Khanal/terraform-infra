@@ -23,7 +23,7 @@ resource "aws_subnet" "public2" {
   vpc_id                  = aws_vpc.this.id
   cidr_block              = var.public_subnet2_cidr
   map_public_ip_on_launch = true
-  availability_zone       = data.aws_availability_zones.available.names[0]
+  availability_zone       = data.aws_availability_zones.available.names[1]
 
   tags = merge(var.tags, {
     Name = "terraformrnd-public2-subnet-${var.environment}"

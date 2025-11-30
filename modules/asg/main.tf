@@ -1,6 +1,6 @@
 resource "aws_security_group" "asg_sg" {
   name        = "asg-sg-${var.environment}"
-  description = "Allow ALB -> EC2"
+  description = "Allow ALB to EC2"
   vpc_id      = var.vpc_id
 
   ingress {
