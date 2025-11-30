@@ -98,11 +98,11 @@ resource "aws_lb_listener" "http" {
     forward {
       target_group {
         arn    = aws_lb_target_group.blue.arn
-        weight = 100 - var.green_weight
+        weight = 100
       }
       target_group {
-        arn    = aws_lb_target_group.green.arn
-        weight = var.green_weight
+        arn    = var.deploy_green ? aws_lb_target_group.green[0].arn : null
+        weight = var.deploy_green ? 0 : 0
       }
     }
   }
