@@ -27,7 +27,7 @@ resource "aws_launch_template" "blue" {
   image_id      = var.ami_id
   instance_type = "t2.micro"
 
-  user_data = file("${path.module}/userdata.sh")
+  user_data = file("../../modules/ec2/userdata.sh")
 
   network_interfaces {
     security_groups = [aws_security_group.asg_sg.id]
@@ -43,7 +43,7 @@ resource "aws_launch_template" "green" {
   image_id      = var.ami_id
   instance_type = "t2.micro"
 
-  user_data = file("${path.module}/userdata.sh")
+  user_data = file("../../modules/ec2/userdata.sh")
 
   network_interfaces {
     security_groups = [aws_security_group.asg_sg.id]
