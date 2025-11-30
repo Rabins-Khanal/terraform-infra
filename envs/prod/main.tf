@@ -30,6 +30,7 @@ module "asg" {
   alb_sg_id          = module.alb.alb_sg_id
   tg_blue_arn        = module.alb.tg_blue_arn
   tg_green_arn       = module.alb.tg_green_arn
+  user_data_file     = "../../modules/ec2/userdata.sh"
   tags               = local.tags
 }
 
