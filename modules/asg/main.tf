@@ -1,3 +1,6 @@
+##########################
+# Security Group for ASG
+##########################
 resource "aws_security_group" "asg_sg" {
   name        = "asg-sg-${var.environment}"
   description = "Allow ALB to EC2"
@@ -22,6 +25,9 @@ resource "aws_security_group" "asg_sg" {
   })
 }
 
+##########################
+# Launch Templates
+##########################
 resource "aws_launch_template" "blue" {
   name_prefix   = "lt-blue-${var.environment}"
   image_id      = var.ami_id
@@ -39,6 +45,7 @@ resource "aws_launch_template" "blue" {
 }
 
 resource "aws_launch_template" "green" {
+  count         = var.deploy_green ? 1 : 0
   name_prefix   = "lt-green-${var.environment}"
   image_id      = var.ami_id
   instance_type = "t2.micro"
@@ -54,6 +61,9 @@ resource "aws_launch_template" "green" {
   }
 }
 
+##########################
+# Auto Scaling Groups
+##########################
 resource "aws_autoscaling_group" "blue" {
   name                = "asg-blue-${var.environment}"
   max_size            = 3
@@ -82,6 +92,7 @@ resource "aws_autoscaling_group" "blue" {
 }
 
 resource "aws_autoscaling_group" "green" {
+  count               = var.deploy_green ? 1 : 0
   name                = "asg-green-${var.environment}"
   max_size            = 3
   min_size            = 1
@@ -91,7 +102,7 @@ resource "aws_autoscaling_group" "green" {
   health_check_type = "EC2"
 
   launch_template {
-    id      = aws_launch_template.green.id
+    id      = aws_launch_template.green[0].id
     version = "$Latest"
   }
 

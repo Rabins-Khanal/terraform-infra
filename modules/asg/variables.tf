@@ -10,3 +10,7 @@ variable "user_data_file" {
   description = "Path to userdata.sh for EC2 instances"
   type        = string
 }
+variable "deploy_green" {
+  type        = bool
+  description = "Whether to deploy the green environment"
+}
