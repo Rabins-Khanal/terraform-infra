@@ -85,9 +85,6 @@ resource "aws_lb_target_group" "green" {
 }
 
 
-##########################
-# Listener
-##########################
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.arn
   port              = 80
@@ -95,15 +92,23 @@ resource "aws_lb_listener" "http" {
 
   default_action {
     type = "forward"
+
     forward {
+      # Always include blue
       target_group {
         arn    = aws_lb_target_group.blue.arn
         weight = 100
       }
-      target_group {
-        arn    = var.deploy_green ? aws_lb_target_group.green[0].arn : null
-        weight = var.deploy_green ? 0 : 0
+
+      # Conditionally include green
+      dynamic "target_group" {
+        for_each = var.deploy_green ? [aws_lb_target_group.green[0]] : []
+        content {
+          arn    = target_group.value.arn
+          weight = 0
+        }
       }
     }
   }
 }
+
