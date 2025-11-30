@@ -13,35 +13,33 @@ module "vpc" {
   tags                 = local.tags
 }
 
-module "ec2" {
-  source            = "../../modules/ec2"
+module "alb" {
+  source            = "../../modules/alb"
   environment       = var.environment
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
+  alb_sg_id         = module.vpc.alb_sg_id
   tags              = local.tags
-  key_name          = "terraformrnd-keypair-${var.environment}"
-  ami_id            = var.ami_id
 }
 
-module "rds" {
-  source             = "../../modules/rds"
+module "asg" {
+  source             = "../../modules/asg"
   environment        = var.environment
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
-  ec2_sg_id          = module.ec2.ec2_sg_id
-  db_username        = var.db_username
-  db_password        = var.db_password
+  ami_id             = var.ami_id
+  alb_sg_id          = module.vpc.alb_sg_id
+  tg_blue_arn        = module.alb.tg_blue_arn
+  tg_green_arn       = module.alb.tg_green_arn
   tags               = local.tags
 }
 
 locals {
   tags = {
     Environment = var.environment
-    purpose     = "Test"
+    purpose     = "Prod"
     Owner       = "rabins.khanal@genesesolution.com"
-    Project     = "Terraform R and D"
+    Project     = "Terraform RnD"
     Schedule    = "NP-office"
   }
-
 }
-
