@@ -25,16 +25,22 @@ resource "aws_security_group" "asg_sg" {
   })
 }
 
+##########################
+# Local tags
+##########################
 locals {
   common_tags = {
     Environment = var.environment
-    purpose     = "Test"
+    Purpose     = "Test" # Capital P
     Owner       = "rabins.khanal@genesesolution.com"
     Project     = "Terraform RnD"
     Schedule    = "NP-office"
   }
 }
 
+##########################
+# Launch Templates
+##########################
 resource "aws_launch_template" "blue" {
   name_prefix   = "lt-blue-${var.environment}"
   image_id      = var.ami_id
@@ -59,6 +65,7 @@ resource "aws_launch_template" "blue" {
     create_before_destroy = true
   }
 }
+
 resource "aws_launch_template" "green" {
   count         = var.deploy_green ? 1 : 0
   name_prefix   = "lt-green-${var.environment}"
@@ -70,6 +77,15 @@ resource "aws_launch_template" "green" {
   network_interfaces {
     security_groups = [aws_security_group.asg_sg.id]
   }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = local.common_tags
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "lt-green-${var.environment}"
+  })
 
   lifecycle {
     create_before_destroy = true
@@ -97,6 +113,7 @@ resource "aws_autoscaling_group" "blue" {
   lifecycle {
     create_before_destroy = true
   }
+
   tag {
     key                 = "Name"
     value               = "blue-ec2-${var.environment}"
@@ -124,6 +141,7 @@ resource "aws_autoscaling_group" "green" {
   lifecycle {
     create_before_destroy = true
   }
+
   tag {
     key                 = "Name"
     value               = "green-ec2-${var.environment}"
