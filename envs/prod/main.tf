@@ -7,13 +7,12 @@ locals {
   # All tag keys follow the capitalization enforced by your Tag Policy
   tags = {
     Environment = var.environment
-    Purpose     = "Prod" # Capital P
+    Purpose     = "Prod"
     Owner       = "rabins.khanal@genesesolution.com"
     Project     = "Terraform RnD"
     Schedule    = "NP-office"
   }
 }
-
 module "vpc" {
   source               = "../../modules/vpc"
   environment          = var.environment
