@@ -59,7 +59,6 @@ resource "aws_launch_template" "blue" {
     create_before_destroy = true
   }
 }
-
 resource "aws_launch_template" "green" {
   count         = var.deploy_green ? 1 : 0
   name_prefix   = "lt-green-${var.environment}"
