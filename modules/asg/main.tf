@@ -28,7 +28,7 @@ resource "aws_security_group" "asg_sg" {
 locals {
   common_tags = {
     Environment = var.environment
-    purpose     = "Test"
+    Purpose     = "Test"
     Owner       = "rabins.khanal@genesesolution.com"
     Project     = "Terraform RnD"
     Schedule    = "NP-office"
