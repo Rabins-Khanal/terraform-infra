@@ -25,13 +25,13 @@ resource "aws_security_group" "asg_sg" {
   })
 }
 
-##########################
+#########################
 # Launch Templates
 ##########################
 resource "aws_launch_template" "blue" {
   name_prefix   = "lt-blue-${var.environment}"
   image_id      = var.ami_id
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 
   user_data = base64encode(file(var.user_data_file))
 
