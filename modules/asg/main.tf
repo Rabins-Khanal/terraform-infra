@@ -70,7 +70,7 @@ resource "aws_launch_template" "green" {
   count         = var.deploy_green ? 1 : 0
   name_prefix   = "lt-green-${var.environment}"
   image_id      = var.ami_id
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 
   user_data = base64encode(file(var.user_data_file))
 
