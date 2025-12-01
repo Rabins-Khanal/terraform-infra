@@ -126,7 +126,6 @@ resource "aws_autoscaling_group" "green" {
   lifecycle {
     create_before_destroy = true
   }
-
   tag {
     key                 = "Name"
     value               = "green-ec2-${var.environment}"
