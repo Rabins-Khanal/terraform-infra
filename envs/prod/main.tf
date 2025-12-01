@@ -40,7 +40,7 @@ module "asg" {
 locals {
   tags = {
     Environment = var.environment
-    Purpose     = "Prod"
+    purpose     = "Prod"
     Owner       = "rabins.khanal@genesesolution.com"
     Project     = "Terraform RnD"
     Schedule    = "NP-office"
