@@ -25,9 +25,16 @@ resource "aws_security_group" "asg_sg" {
   })
 }
 
-#########################
-# Launch Templates
-##########################
+locals {
+  common_tags = {
+    Environment = var.environment
+    purpose     = "Test"
+    Owner       = "rabins.khanal@genesesolution.com"
+    Project     = "Terraform RnD"
+    Schedule    = "NP-office"
+  }
+}
+
 resource "aws_launch_template" "blue" {
   name_prefix   = "lt-blue-${var.environment}"
   image_id      = var.ami_id
@@ -37,15 +44,19 @@ resource "aws_launch_template" "blue" {
     security_groups = [aws_security_group.asg_sg.id]
   }
 
+  # Tags for instances launched from this template
+  tag_specifications {
+    resource_type = "instance"
+    tags          = local.common_tags
+  }
+
+  # Tags for the launch template resource itself
+  tags = merge(local.common_tags, {
+    Name = "lt-blue-${var.environment}"
+  })
+
   lifecycle {
     create_before_destroy = true
-  }
-  tags = {
-    Environment = var.environment
-    purpose     = "Test"
-    Owner       = "rabins.khanal@genesesolution.com"
-    Project     = "Terraform RnD"
-    Schedule    = "NP-office"
   }
 }
 
