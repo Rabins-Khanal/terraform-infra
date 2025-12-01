@@ -33,8 +33,6 @@ resource "aws_launch_template" "blue" {
   image_id      = var.ami_id
   instance_type = "t3.micro"
 
-  user_data = base64encode(file(var.user_data_file))
-
   network_interfaces {
     security_groups = [aws_security_group.asg_sg.id]
   }
