@@ -29,7 +29,7 @@ resource "aws_security_group" "asg_sg" {
 # Launch Templates
 ##########################
 resource "aws_launch_template" "blue" {
-  name_prefix   = "lt-${var.environment}"
+  name_prefix   = "lt-blue-${var.environment}"
   image_id      = var.ami_id
   instance_type = "t2.micro"
 
