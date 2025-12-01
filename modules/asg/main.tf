@@ -42,6 +42,13 @@ resource "aws_launch_template" "blue" {
   lifecycle {
     create_before_destroy = true
   }
+  tags = {
+    Environment = var.environment
+    purpose     = "Prod"
+    Owner       = "rabins.khanal@genesesolution.com"
+    Project     = "Terraform RnD"
+    Schedule    = "NP-office"
+  }
 }
 
 resource "aws_launch_template" "green" {
