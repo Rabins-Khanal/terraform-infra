@@ -6,6 +6,6 @@ variable "db_password" { default = "Password123!" }
 
 variable "deploy_green" {
   type        = bool
-  default     = false
+  default     = true
   description = "Whether to deploy the green environment"
 }
