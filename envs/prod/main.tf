@@ -34,6 +34,8 @@ module "codedeploy" {
   asg_green_name         = module.asg.asg_green_name
   tg_blue_arn            = module.alb.tg_blue_arn
   tg_green_arn           = module.alb.tg_green_arn
+  tg_blue_name           = module.alb.tg_blue_name
+  tg_green_name          = module.alb.tg_green_name
   listener_arn           = module.alb.listener_arn
   terminate_wait_minutes = 5
 }
