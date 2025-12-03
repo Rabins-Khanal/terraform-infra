@@ -125,10 +125,10 @@ resource "aws_codedeploy_deployment_group" "dg" {
   # Load balancer target groups and listener
   load_balancer_info {
     target_group_pair_info {
-      target_groups {
+      target_group {
         name = var.tg_blue_arn
       }
-      target_groups {
+      target_group {
         name = var.tg_green_arn
       }
       prod_traffic_route {
