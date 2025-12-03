@@ -4,7 +4,6 @@
 
 resource "aws_s3_bucket" "artifacts" {
   bucket = var.artifact_bucket_name
-  acl    = "private"
   tags   = var.tags
 }
 
@@ -38,7 +37,7 @@ resource "aws_iam_role" "codedeploy_service" {
 
 resource "aws_iam_role_policy_attachment" "codedeploy_service_attach" {
   role       = aws_iam_role.codedeploy_service.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRoleForEC2"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
 }
 
 # ---------------------
