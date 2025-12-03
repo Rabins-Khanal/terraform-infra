@@ -24,6 +24,21 @@ module "vpc" {
   tags                 = local.tags
 }
 
+module "codedeploy" {
+  source               = "../../modules/codedeploy"
+  environment          = var.environment
+  tags                 = local.tags
+  artifact_bucket_name = "wordpress-artifact-${var.environment}"
+  codedeploy_app_name  = "wordpress-app-${var.environment}"
+  deployment_group_name = "wordpress-prod-dg"
+  asg_blue_name        = module.asg.asg_blue_name
+  asg_green_name        = module.asg.asg_green_name
+  tg_blue_arn          = module.alb.tg_blue_arn
+  tg_green_arn         = module.alb.tg_green_arn
+  listener_arn         = module.alb.listener_arn
+  terminate_wait_minutes = 5
+}
+
 module "alb" {
   source            = "../../modules/alb"
   environment       = var.environment
