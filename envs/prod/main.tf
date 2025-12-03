@@ -30,7 +30,7 @@ module "codedeploy" {
   artifact_bucket_name   = "wordpress-artifact-${var.environment}"
   codedeploy_app_name    = "wordpress-app-${var.environment}"
   deployment_group_name  = "wordpress-prod-dg"
-  asg_name               = module.asg.blue_name
+  asg_blue_name               = module.asg.blue_name
   asg_green_name         = module.asg.asg_green_name
   tg_blue_arn            = module.alb.tg_blue_arn
   tg_green_arn           = module.alb.tg_green_arn
