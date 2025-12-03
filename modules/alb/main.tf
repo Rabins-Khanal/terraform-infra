@@ -96,7 +96,7 @@ resource "aws_lb_listener" "http" {
     forward {
       # Always include blue
       target_group {
-        arn    = aws_lb_target_group.blue.arn
+        name   = aws_lb_target_group.blue.name
         weight = 100
       }
 
@@ -104,7 +104,7 @@ resource "aws_lb_listener" "http" {
       dynamic "target_group" {
         for_each = var.deploy_green ? [aws_lb_target_group.green[0]] : []
         content {
-          arn    = target_group.value.arn
+          name   = target_group.value.name
           weight = 0
         }
       }
