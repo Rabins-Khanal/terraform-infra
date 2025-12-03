@@ -12,4 +12,11 @@ variable "terminate_wait_minutes" {
   type    = number
   default = 5
 }
+variable "tg_blue_name" {
+  type = string
+}
+
+variable "tg_green_name" {
+  type = string
+}
 
