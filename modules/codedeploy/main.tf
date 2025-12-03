@@ -134,7 +134,7 @@ resource "aws_codedeploy_deployment_group" "dg" {
 
       # listener MUST be ARN
       prod_traffic_route {
-        listener_names = [var.listener_arn]
+        listener_arns = [var.listener_arn]
       }
     }
   }
