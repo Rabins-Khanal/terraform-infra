@@ -12,4 +12,6 @@ variable "terminate_wait_minutes" {
   type    = number
   default = 5
 }
-
+variable "asg_name" {
+  type = string
+}

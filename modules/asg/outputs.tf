@@ -4,9 +4,9 @@ output "asg_blue_name" {
   value       = aws_autoscaling_group.blue.name
 }
 output "asg_green_name" {
-  description = "The name of the Green Auto Scaling Group"
-  value       = aws_autoscaling_group.green.name
+  value = var.deploy_green ? aws_autoscaling_group.green[0].name : ""
 }
+
 output "asg_green_id" {
   value = var.deploy_green ? aws_autoscaling_group.green[0].id : ""
 }
