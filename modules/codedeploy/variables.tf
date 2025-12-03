@@ -12,6 +12,6 @@ variable "terminate_wait_minutes" {
   type    = number
   default = 5
 }
-variable "asg_name" {
+variable "asg_blue_name" {
   type = string
 }
