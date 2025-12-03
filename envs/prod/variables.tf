@@ -9,4 +9,3 @@ variable "deploy_green" {
   default     = true
   description = "Whether to deploy the green environment"
 }
-#
