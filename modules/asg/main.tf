@@ -47,7 +47,7 @@ resource "aws_launch_template" "blue" {
   instance_type = "t3.micro"
 
   iam_instance_profile {
-  name = module.codedeploy.ec2_instance_profile  
+    name = module.codedeploy.ec2_instance_profile
   }
 
   user_data = base64encode(file(var.user_data_file))
