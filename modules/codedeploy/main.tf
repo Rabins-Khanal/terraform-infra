@@ -124,7 +124,7 @@ resource "aws_codedeploy_deployment_group" "dg" {
   }
 
   # The ASG that will be cloned for green deployment
-  autoscaling_groups = [var.asg_name]
+  autoscaling_groups = [var.asg_blue_name]
 
   # Load balancer target groups and listener
   load_balancer_info {
