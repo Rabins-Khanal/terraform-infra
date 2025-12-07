@@ -142,10 +142,8 @@ resource "aws_codedeploy_deployment_group" "dg" {
   tags = var.tags
 
   depends_on = [
-    aws_autoscaling_group.blue,
-    aws_lb_target_group.blue,
-    aws_lb_target_group.green,
-    aws_lb_listener.http
+    module.asg,
+    module.alb
   ]
 }
 
