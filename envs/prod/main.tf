@@ -28,7 +28,6 @@ module "alb" {
   environment       = var.environment
   vpc_id            = module.vpc.vpc_id
   public_subnet_ids = module.vpc.public_subnet_ids
-  deploy_green      = var.deploy_green
   tags              = local.tags
 }
 
@@ -41,7 +40,6 @@ module "asg" {
   alb_sg_id            = module.alb.alb_sg_id
   tg_blue_arn          = module.alb.tg_blue_arn
   tg_green_arn         = module.alb.tg_green_arn
-  deploy_green         = var.deploy_green
   ec2_instance_profile = module.codedeploy.ec2_instance_profile
   user_data_file       = "../../modules/ec2/userdata.sh"
   tags                 = local.tags
@@ -55,7 +53,6 @@ module "codedeploy" {
   codedeploy_app_name    = "wordpress-app-${var.environment}"
   deployment_group_name  = "wordpress-prod-dg"
   asg_blue_name          = module.asg.asg_blue_name
-  asg_green_name         = module.asg.asg_green_name
   tg_blue_arn            = module.alb.tg_blue_arn
   tg_green_arn           = module.alb.tg_green_arn
   tg_blue_name           = module.alb.tg_blue_name

@@ -72,31 +72,6 @@ resource "aws_launch_template" "blue" {
   }
 }
 
-resource "aws_launch_template" "green" {
-  count         = var.deploy_green ? 1 : 0
-  name_prefix   = "lt-green-${var.environment}"
-  image_id      = var.ami_id
-  instance_type = "t3.micro"
-
-  user_data = base64encode(file(var.user_data_file))
-
-  network_interfaces {
-    security_groups = [aws_security_group.asg_sg.id]
-  }
-
-  tag_specifications {
-    resource_type = "instance"
-    tags          = local.common_tags
-  }
-
-  tags = merge(local.common_tags, {
-    Name = "lt-green-${var.environment}"
-  })
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
 
 ##########################
 # Auto Scaling Groups
@@ -127,30 +102,3 @@ resource "aws_autoscaling_group" "blue" {
   }
 }
 
-resource "aws_autoscaling_group" "green" {
-  count               = var.deploy_green ? 1 : 0
-  name                = "asg-green-${var.environment}"
-  max_size            = 3
-  min_size            = 1
-  desired_capacity    = 2
-  vpc_zone_identifier = var.private_subnet_ids
-
-  health_check_type = "EC2"
-
-  launch_template {
-    id      = aws_launch_template.green[0].id
-    version = "$Latest"
-  }
-
-  target_group_arns = [var.tg_green_arn]
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tag {
-    key                 = "Name"
-    value               = "green-ec2-${var.environment}"
-    propagate_at_launch = true
-  }
-}
