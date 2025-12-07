@@ -64,7 +64,6 @@ resource "aws_lb_target_group" "blue" {
 }
 
 resource "aws_lb_target_group" "green" {
-  count       = var.deploy_green ? 1 : 0
   name        = "tg-green-${var.environment}"
   port        = 80
   protocol    = "HTTP"
