@@ -11,5 +11,5 @@ output "tg_blue_name" {
 }
 
 output "tg_green_name" {
-  value = var.deploy_green ? aws_lb_target_group.green[0].name : ""
+  value = aws_lb_target_group.green.name
 }
