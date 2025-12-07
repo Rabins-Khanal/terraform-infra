@@ -125,10 +125,10 @@ resource "aws_codedeploy_deployment_group" "dg" {
   # Target Groups MUST USE NAME — not ARN
   load_balancer_info {
     target_group_pair_info {
-      target_groups {
+      target_group {
         name = var.tg_blue_name
       }
-      target_groups {
+      target_group {
         name = var.tg_green_name
       }
 
