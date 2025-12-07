@@ -142,8 +142,9 @@ resource "aws_codedeploy_deployment_group" "dg" {
   tags = var.tags
 
   depends_on = [
-    module.asg,
-    module.alb
+    aws_codedeploy_app.app,
+    aws_iam_role.codedeploy_service
   ]
+
 }
 
