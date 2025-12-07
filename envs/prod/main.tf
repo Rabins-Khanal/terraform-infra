@@ -59,4 +59,11 @@ module "codedeploy" {
   tg_green_name          = module.alb.tg_green_name
   listener_arn           = module.alb.listener_arn
   terminate_wait_minutes = 5
+
+  # ✅ Ensure the module runs after ALB and ASG are created
+  depends_on = [
+    module.alb,
+    module.asg
+  ]
 }
+
