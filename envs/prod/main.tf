@@ -63,7 +63,7 @@ module "codedeploy" {
   # ✅ Ensure the module runs after ALB and ASG are created
   depends_on = [
     module.alb,
-    module.asg
+
   ]
 }
 
