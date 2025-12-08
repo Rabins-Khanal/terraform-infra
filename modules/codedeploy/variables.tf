@@ -18,5 +18,3 @@ variable "tg_blue_name" {
 variable "tg_green_name" {
   type = string
 }
-
-#

@@ -1,6 +1,4 @@
-##########################################
 # modules/codedeploy/main.tf
-##########################################
 
 # S3 Bucket for Artifact Storage
 resource "aws_s3_bucket" "artifacts" {
@@ -16,9 +14,7 @@ resource "aws_s3_bucket_versioning" "artifacts_versioning" {
   }
 }
 
-############################################################
 # IAM Roles
-############################################################
 
 # CodeDeploy Service Role
 data "aws_iam_policy_document" "codedeploy_assume" {
@@ -79,9 +75,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   role = aws_iam_role.ec2_instance.name
 }
 
-############################################################
 # CodeDeploy Application
-############################################################
 
 resource "aws_codedeploy_app" "app" {
   name             = var.codedeploy_app_name
@@ -89,9 +83,7 @@ resource "aws_codedeploy_app" "app" {
   tags             = var.tags
 }
 
-############################################################
 # Deployment Group — BLUE / GREEN
-############################################################
 
 resource "aws_codedeploy_deployment_group" "dg" {
   app_name              = aws_codedeploy_app.app.name
