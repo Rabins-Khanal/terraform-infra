@@ -1,6 +1,6 @@
-# modules/codedeploy/main.tf
-
+# -------------------------------
 # S3 Bucket for Artifact Storage
+# -------------------------------
 resource "aws_s3_bucket" "artifacts" {
   bucket = var.artifact_bucket_name
   tags   = var.tags
@@ -14,7 +14,9 @@ resource "aws_s3_bucket_versioning" "artifacts_versioning" {
   }
 }
 
+# -------------------------------
 # IAM Roles
+# -------------------------------
 
 # CodeDeploy Service Role
 data "aws_iam_policy_document" "codedeploy_assume" {
@@ -33,12 +35,46 @@ resource "aws_iam_role" "codedeploy_service" {
   tags               = var.tags
 }
 
+# Attach AWS managed policy for blue/green deployments
 resource "aws_iam_role_policy_attachment" "codedeploy_service_attach" {
   role       = aws_iam_role.codedeploy_service.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRoleForBlueGreen"
 }
 
+# Attach custom policy for ASG & ELB operations
+data "aws_iam_policy_document" "codedeploy_asg_policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "autoscaling:UpdateAutoScalingGroup",
+      "autoscaling:DescribeAutoScalingGroups",
+      "autoscaling:DescribeAutoScalingInstances",
+      "autoscaling:TerminateInstanceInAutoScalingGroup",
+      "autoscaling:AttachInstances",
+      "autoscaling:DetachInstances",
+      "elasticloadbalancing:DescribeTargetGroups",
+      "elasticloadbalancing:DescribeListeners",
+      "elasticloadbalancing:ModifyTargetGroupAttributes",
+      "elasticloadbalancing:RegisterTargets",
+      "elasticloadbalancing:DeregisterTargets"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "codedeploy_asg_policy" {
+  name   = "codedeploy-asg-policy-${var.environment}"
+  policy = data.aws_iam_policy_document.codedeploy_asg_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "codedeploy_asg_attach" {
+  role       = aws_iam_role.codedeploy_service.name
+  policy_arn = aws_iam_policy.codedeploy_asg_policy.arn
+}
+
+# -------------------------------
 # EC2 IAM Role (needed for CodeDeploy Agent)
+# -------------------------------
 data "aws_iam_policy_document" "ec2_assume" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -75,16 +111,18 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   role = aws_iam_role.ec2_instance.name
 }
 
+# -------------------------------
 # CodeDeploy Application
-
+# -------------------------------
 resource "aws_codedeploy_app" "app" {
   name             = var.codedeploy_app_name
   compute_platform = "Server"
   tags             = var.tags
 }
 
+# -------------------------------
 # Deployment Group — BLUE / GREEN
-
+# -------------------------------
 resource "aws_codedeploy_deployment_group" "dg" {
   app_name              = aws_codedeploy_app.app.name
   deployment_group_name = var.deployment_group_name
@@ -111,7 +149,7 @@ resource "aws_codedeploy_deployment_group" "dg" {
     }
   }
 
-  # ASG NAME — must be name, NOT ARN
+  # Only blue ASG is needed; CodeDeploy clones green automatically
   autoscaling_groups = [var.asg_blue_name]
 
   # Target Groups MUST USE NAME — not ARN
@@ -137,6 +175,4 @@ resource "aws_codedeploy_deployment_group" "dg" {
     aws_codedeploy_app.app,
     aws_iam_role.codedeploy_service
   ]
-
 }
-
