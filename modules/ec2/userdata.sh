@@ -1,20 +1,21 @@
 #!/bin/bash
-set -e
+set -xe  # prints commands and exits on error
 
-# install apache/php
-apt-get update -y || yum update -y
-# install LAMP stack depending on distro; here's ubuntu example
+echo "Running user-data script..." > /var/log/user-data.log
+
 if [ -f /etc/debian_version ]; then
+  apt-get update -y
   apt-get install -y apache2 php php-mysql libapache2-mod-php unzip
   systemctl enable apache2
   systemctl start apache2
+  echo "LAMP installed" >> /var/log/user-data.log
 fi
 
-# Install CodeDeploy agent (region-specific endpoint)
-REGION="ap-south-1"  # change to your region if different
+REGION="ap-south-1"
 cd /tmp
 wget https://aws-codedeploy-${REGION}.s3.${REGION}.amazonaws.com/latest/install
 chmod +x ./install
 ./install auto
 systemctl enable codedeploy-agent || true
 systemctl start codedeploy-agent || true
+echo "CodeDeploy agent installed" >> /var/log/user-data.log
