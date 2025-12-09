@@ -87,6 +87,7 @@ resource "aws_autoscaling_group" "blue" {
 
   launch_template {
     id = aws_launch_template.blue.id
+     version = "$Latest" 
   }
 
   target_group_arns = [var.tg_blue_arn]
