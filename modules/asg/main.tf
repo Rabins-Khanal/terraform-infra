@@ -45,7 +45,7 @@ resource "aws_launch_template" "blue" {
   name_prefix   = "lt-blue-${var.environment}"
   image_id      = var.ami_id
   instance_type = "t3.micro"
-
+  key_name      = "asg-blue"
   iam_instance_profile {
     name = var.ec2_instance_profile
   }
