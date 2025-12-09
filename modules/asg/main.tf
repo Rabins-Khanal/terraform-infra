@@ -13,6 +13,13 @@ resource "aws_security_group" "asg_sg" {
     security_groups = [var.alb_sg_id]
   }
 
+ ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [var.alb_sg_id]
+  }
+  
   egress {
     from_port   = 0
     to_port     = 0
