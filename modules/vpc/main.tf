@@ -117,3 +117,14 @@ resource "aws_route_table_association" "private2" {
   route_table_id = aws_route_table.private2.id
 }
 
+resource "aws_route" "public1_igw" {
+  route_table_id         = aws_route_table.public1.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this.id
+}
+
+resource "aws_route" "public2_igw" {
+  route_table_id         = aws_route_table.public2.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.this.id
+}
