@@ -137,7 +137,6 @@ resource "aws_route_table_association" "private2" {
 
 # NAT Gateway setup
 resource "aws_eip" "nat" {
-  vpc = true
 
   tags = merge(var.tags, {
     Name = "terraformrnd-nat-eip-${var.environment}"
