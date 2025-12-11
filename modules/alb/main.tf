@@ -47,7 +47,7 @@ resource "aws_lb" "this" {
   })
 }
 
-##########################
+#########################
 # Target Groups
 ##########################
 resource "aws_lb_target_group" "blue" {
