@@ -58,7 +58,7 @@ resource "aws_lb_target_group" "blue" {
   target_type = "instance"
 
   health_check {
-    path                = "/index.html"
+    path                = "/"
     port                = "80"
     healthy_threshold   = 2
     unhealthy_threshold = 2
@@ -78,7 +78,7 @@ resource "aws_lb_target_group" "green" {
   target_type = "instance"
 
   health_check {
-    path                = "/index.html"
+    path                = "/"
     port                = "80"
     healthy_threshold   = 2
     unhealthy_threshold = 2
