@@ -114,7 +114,7 @@ resource "aws_codedeploy_deployment_group" "dg" {
   # ASG NAME — must be name, NOT ARN
   autoscaling_groups = [var.asg_blue_name]
 
-  # Target Groups MUST USE NAME — not ARN
+  # Target Group MUST USE NAME — not ARN
   load_balancer_info {
     target_group_pair_info {
       target_group {
