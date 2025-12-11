@@ -58,11 +58,11 @@ resource "aws_lb_target_group" "blue" {
   target_type = "instance"
 
   health_check {
-    path                = "/"
+    path                = "/index.html"
     port                = "80"
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    interval            = 10
+    interval            = 30
   }
 
   tags = merge(var.tags, {
@@ -78,11 +78,11 @@ resource "aws_lb_target_group" "green" {
   target_type = "instance"
 
   health_check {
-    path                = "/"
+    path                = "/index.html"
     port                = "80"
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    interval            = 10
+    interval            = 30
   }
 
   tags = merge(var.tags, {
