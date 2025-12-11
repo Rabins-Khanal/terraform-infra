@@ -49,7 +49,7 @@ resource "aws_lb" "this" {
 
 #########################
 # Target Groups
-##########################
+#########################
 resource "aws_lb_target_group" "blue" {
   name        = "tg-blue-${var.environment}"
   port        = 80
