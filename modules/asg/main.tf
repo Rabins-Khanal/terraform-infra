@@ -59,8 +59,6 @@ resource "aws_launch_template" "blue" {
 
   user_data = base64encode(file(var.user_data_file))
 
-  vpc_zone_identifier = var.private_subnet_ids
-
 
   # Tags for instances launched from this template
   tag_specifications {
