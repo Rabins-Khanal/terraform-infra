@@ -59,6 +59,9 @@ resource "aws_launch_template" "blue" {
 
   user_data = base64encode(file(var.user_data_file))
 
+  network_interfaces {
+    security_groups = [aws_security_group.asg_sg.id]
+  }
 
   # Tags for instances launched from this template
   tag_specifications {
@@ -87,8 +90,7 @@ resource "aws_autoscaling_group" "blue" {
   desired_capacity    = 2
   vpc_zone_identifier = var.private_subnet_ids
 
-  health_check_type         = "ELB"
-  health_check_grace_period = 60
+  health_check_type = "EC2"
 
   launch_template {
     id      = aws_launch_template.blue.id
