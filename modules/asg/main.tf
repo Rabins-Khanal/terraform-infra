@@ -108,10 +108,8 @@ resource "aws_autoscaling_group" "blue" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "blue_asg" {
-  for_each = toset(aws_autoscaling_group.blue.instances)
-
-  target_group_arn = var.tg_blue_arn
-  target_id        = each.value
-  port             = 80
+resource "aws_autoscaling_attachment" "blue_asg_tg" {
+  autoscaling_group_name = aws_autoscaling_group.blue.name
+  alb_target_group_arn   = aws_lb_target_group.blue.arn
 }
+
