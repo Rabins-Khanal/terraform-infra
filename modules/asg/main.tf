@@ -110,6 +110,6 @@ resource "aws_autoscaling_group" "blue" {
 
 resource "aws_autoscaling_attachment" "blue_asg_tg" {
   autoscaling_group_name = aws_autoscaling_group.blue.name
-  alb_target_group_arn   = var.tg_blue_arn
+  lb_target_group_arn    = var.tg_blue_arn
 }
 
