@@ -82,7 +82,7 @@ resource "aws_launch_template" "blue" {
 
 ##########################
 # Auto Scaling Groups
-##########################
+#########################
 resource "aws_autoscaling_group" "blue" {
   name                = "asg-blue-${var.environment}"
   max_size            = 3
