@@ -97,8 +97,6 @@ resource "aws_autoscaling_group" "blue" {
     version = "$Latest"
   }
 
-  target_group_arns = [var.tg_blue_arn]
-
   lifecycle {
     create_before_destroy = true
   }
@@ -110,3 +108,10 @@ resource "aws_autoscaling_group" "blue" {
   }
 }
 
+resource "aws_lb_target_group_attachment" "blue_asg" {
+  for_each = toset(aws_autoscaling_group.blue.instances)
+
+  target_group_arn = var.tg_blue_arn
+  target_id        = each.value
+  port             = 80
+}
