@@ -101,11 +101,11 @@ resource "aws_lb_listener" "http" {
     forward {
       target_group {
         arn    = aws_lb_target_group.blue.arn
-        weight = 0
+        weight = 50
       }
       target_group {
         arn    = aws_lb_target_group.green.arn
-        weight = 100
+        weight = 50
       }
     }
   }
