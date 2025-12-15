@@ -46,11 +46,15 @@ module "asg" {
 }
 
 module "codedeploy" {
-  source                 = "../../modules/codedeploy"
-  environment            = var.environment
-  tags                   = local.tags
-  artifact_bucket_name   = "wordpress-artifact-${var.environment}"
-  codedeploy_app_name    = "wordpress-app-${var.environment}"
+  source = "../../modules/codedeploy"
+
+  environment = var.environment
+  tags        = local.tags
+
+  artifact_bucket_name  = "wordpress-artifact-${var.environment}"
+  codedeploy_app_name   = "wordpress-app-${var.environment}"
+  deployment_group_name = "wordpress-${var.environment}-dg"
+
   asg_blue_name          = module.asg.asg_blue_name
   tg_blue_name           = module.alb.tg_blue_name
   tg_green_name          = module.alb.tg_green_name
@@ -58,8 +62,8 @@ module "codedeploy" {
   terminate_wait_minutes = 5
 
   depends_on = [
-    module.alb,
-
+    module.alb
   ]
 }
+
 

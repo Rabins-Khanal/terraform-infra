@@ -56,7 +56,7 @@ resource "aws_lb_target_group" "blue" {
   protocol             = "HTTP"
   vpc_id               = var.vpc_id
   target_type          = "instance"
-  deregistration_delay = 900
+  deregistration_delay = 850
 
   health_check {
     path                = "/"
@@ -77,7 +77,7 @@ resource "aws_lb_target_group" "green" {
   protocol             = "HTTP"
   vpc_id               = var.vpc_id
   target_type          = "instance"
-  deregistration_delay = 900
+  deregistration_delay = 850
 
   health_check {
     path                = "/"

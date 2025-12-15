@@ -83,3 +83,55 @@ resource "aws_codedeploy_app" "app" {
   tags             = var.tags
 }
 
+resource "aws_codedeploy_deployment_group" "this" {
+  app_name              = aws_codedeploy_app.app.name
+  deployment_group_name = var.deployment_group_name
+  service_role_arn      = aws_iam_role.codedeploy_service.arn
+
+  deployment_style {
+    deployment_type   = "BLUE_GREEN"
+    deployment_option = "WITH_TRAFFIC_CONTROL"
+  }
+
+  autoscaling_groups = [
+    var.asg_blue_name
+  ]
+
+  blue_green_deployment_config {
+
+    deployment_ready_option {
+      action_on_timeout    = "CONTINUE_DEPLOYMENT"
+      wait_time_in_minutes = 0
+    }
+
+    terminate_blue_instances_on_deployment_success {
+      action                           = "TERMINATE"
+      termination_wait_time_in_minutes = var.terminate_wait_minutes
+    }
+  }
+
+  load_balancer_info {
+    target_group_pair_info {
+
+      prod_traffic_route {
+        listener_arns = [var.listener_arn]
+      }
+
+      target_group {
+        name = var.tg_blue_name
+      }
+
+      target_group {
+        name = var.tg_green_name
+      }
+    }
+  }
+
+  auto_rollback_configuration {
+    enabled = true
+    events  = ["DEPLOYMENT_FAILURE"]
+  }
+
+  tags = var.tags
+}
+
