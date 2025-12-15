@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  # All tag keys follow the capitalization enforced by your Tag Policy
+  # All tag key follow the capitalization enforced by your Tag Policy
   tags = {
     Environment = var.environment
     Purpose     = "Prod"
