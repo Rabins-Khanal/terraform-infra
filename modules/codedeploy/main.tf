@@ -90,7 +90,7 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   deployment_style {
     deployment_type   = "BLUE_GREEN"
-    deployment_option = "WITHOUT_TRAFFIC_CONTROL" # key change
+    deployment_option = "WITH_TRAFFIC_CONTROL" # key change
   }
 
   autoscaling_groups = [
