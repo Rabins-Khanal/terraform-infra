@@ -39,7 +39,6 @@ module "asg" {
   ami_id               = var.ami_id
   alb_sg_id            = module.alb.alb_sg_id
   tg_blue_arn          = module.alb.tg_blue_arn
-  tg_green_arn         = module.alb.tg_green_arn
   ec2_instance_profile = module.codedeploy.ec2_instance_profile
   user_data_file       = "../../modules/ec2/userdata.sh"
   tags                 = local.tags
