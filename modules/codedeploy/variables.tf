@@ -8,7 +8,6 @@ variable "deployment_group_name" { type = string }
 variable "asg_blue_name" { type = string }
 variable "listener_arn" { type = string }
 variable "tg_blue_name" { type = string }
-variable "tg_green_name" { type = string }
 
 variable "terminate_wait_minutes" {
   type    = number
