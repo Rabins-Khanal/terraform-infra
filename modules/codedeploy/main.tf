@@ -111,7 +111,7 @@ resource "aws_codedeploy_deployment_group" "this" {
   }
 
   load_balancer_info {
-    target_group_pair_info {
+    target_group_info {
 
       prod_traffic_route {
         listener_arns = [var.listener_arn]
@@ -119,10 +119,6 @@ resource "aws_codedeploy_deployment_group" "this" {
 
       target_group {
         name = var.tg_blue_name
-      }
-
-      target_group {
-        name = var.tg_green_name
       }
     }
   }
