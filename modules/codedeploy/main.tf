@@ -90,7 +90,7 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   deployment_style {
     deployment_type   = "BLUE_GREEN"
-    deployment_option = "WITH_TRAFFIC_CONTROL"
+    deployment_option = "WITHOUT_TRAFFIC_CONTROL" # key change
   }
 
   autoscaling_groups = [
@@ -98,7 +98,6 @@ resource "aws_codedeploy_deployment_group" "this" {
   ]
 
   blue_green_deployment_config {
-
     deployment_ready_option {
       action_on_timeout    = "CONTINUE_DEPLOYMENT"
       wait_time_in_minutes = 0
@@ -110,9 +109,9 @@ resource "aws_codedeploy_deployment_group" "this" {
     }
   }
 
+  # ✅ Only one target group (Blue) is referenced
   load_balancer_info {
     target_group_pair_info {
-
       prod_traffic_route {
         listener_arns = [var.listener_arn]
       }
@@ -121,9 +120,7 @@ resource "aws_codedeploy_deployment_group" "this" {
         name = var.tg_blue_name
       }
 
-      target_group {
-        name = var.tg_green_name
-      }
+      # No green target group specified
     }
   }
 
@@ -134,4 +131,3 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   tags = var.tags
 }
-

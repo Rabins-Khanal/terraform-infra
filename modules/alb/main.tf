@@ -71,26 +71,6 @@ resource "aws_lb_target_group" "blue" {
   })
 }
 
-resource "aws_lb_target_group" "green" {
-  name                 = "tg-green-${var.environment}"
-  port                 = 80
-  protocol             = "HTTP"
-  vpc_id               = var.vpc_id
-  target_type          = "instance"
-  deregistration_delay = 850
-
-  health_check {
-    path                = "/"
-    port                = "80"
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    interval            = 30
-  }
-
-  tags = merge(var.tags, {
-    Name = "tg-green-${var.environment}"
-  })
-}
 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.arn
@@ -98,20 +78,11 @@ resource "aws_lb_listener" "http" {
   protocol          = "HTTP"
 
   default_action {
-    type = "forward"
-
-    forward {
-      target_group {
-        arn    = aws_lb_target_group.blue.arn
-        weight = 50
-      }
-      target_group {
-        arn    = aws_lb_target_group.green.arn
-        weight = 50
-      }
-    }
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.blue.arn
   }
 }
+
 
 
 
