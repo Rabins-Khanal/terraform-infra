@@ -83,6 +83,7 @@ resource "aws_codedeploy_app" "app" {
   tags             = var.tags
 }
 
+/*
 resource "aws_codedeploy_deployment_group" "this" {
   app_name              = aws_codedeploy_app.app.name
   deployment_group_name = var.deployment_group_name
@@ -109,7 +110,7 @@ resource "aws_codedeploy_deployment_group" "this" {
     }
   }
 
-  # ✅ Only one target group (Blue) is referenced
+
   load_balancer_info {
     target_group_pair_info {
       prod_traffic_route {
@@ -131,3 +132,4 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   tags = var.tags
 }
+*/
