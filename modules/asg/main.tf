@@ -94,13 +94,13 @@ resource "aws_autoscaling_group" "blue" {
 
   launch_template {
     id      = aws_launch_template.blue.id
-    version = "$Latest"
+    version = aws_launch_template.blue.latest_version
   }
   instance_refresh {
     strategy = "Rolling"
     preferences {
       min_healthy_percentage = 50
-      instance_warmup        = 300
+      instance_warmup        = 60
     }
   }
 
