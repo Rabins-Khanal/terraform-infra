@@ -96,6 +96,14 @@ resource "aws_autoscaling_group" "blue" {
     id      = aws_launch_template.blue.id
     version = "$Latest"
   }
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+      instance_warmup        = 300
+    }
+  }
+
 
   lifecycle {
     create_before_destroy = true
