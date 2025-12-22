@@ -51,12 +51,11 @@ resource "aws_lb" "this" {
 # Target Groups
 #########################
 resource "aws_lb_target_group" "blue" {
-  name                 = "tg-blue-${var.environment}"
-  port                 = 80
-  protocol             = "HTTP"
-  vpc_id               = var.vpc_id
-  target_type          = "instance"
-  deregistration_delay = 850
+  name        = "tg-blue-${var.environment}"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "instance"
 
   health_check {
     path                = "/"
