@@ -60,6 +60,13 @@ jobs:
         working-directory: envs/${{ env.ENV }}
         run: terraform init -input=false
 
+      # Sync ASG state AFTER backend init
+      - name: Sync ASG state
+        working-directory: envs/${{ env.ENV }}
+        run: |
+          chmod +x ../prod/sync-asg-state.sh
+          ../prod/sync-asg-state.sh
+
       # Terraform Plan
       - name: Terraform Plan
         working-directory: envs/${{ env.ENV }}
