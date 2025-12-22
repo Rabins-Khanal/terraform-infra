@@ -11,13 +11,10 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # Set AWS credentials
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -26,33 +23,16 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ap-south-1
 
-      # Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.13.5
 
-      # Determine env
-      - name: Determine environment
-        id: env
-        run: |
-          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
-            echo "ENV=dev" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF_NAME}" == "staging" ]]; then
-            echo "ENV=staging" >> $GITHUB_ENV
-          else
-            echo "ENV=prod" >> $GITHUB_ENV
-          fi
-          echo "Using environment: ${{ env.ENV }}"
+      - name: Set environment variable
+        run: echo "ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
 
-      # Terraform Init
-      - name: Terraform Init
-        working-directory: envs/${{ env.ENV }}
-        run: terraform init -input=false
-
-      # Sync ASG state AFTER backend init
       - name: Sync ASG state
         working-directory: envs/${{ env.ENV }}
         run: |
-          chmod +x ../prod/sync-asg-state.sh
-          ../prod/sync-asg-state.sh
+          chmod +x ./sync-asg-state.sh
+          ./sync-asg-state.sh
