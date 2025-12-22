@@ -84,13 +84,13 @@ resource "aws_launch_template" "blue" {
 # Auto Scaling Groups
 #########################
 resource "aws_autoscaling_group" "blue" {
-  name                = "asg-blue-${var.environment}"
+  name_prefix         = "codedeploy-managed-"
   max_size            = 3
   min_size            = 1
   desired_capacity    = 2
   vpc_zone_identifier = var.private_subnet_ids
-
-  health_check_type = "EC2"
+  target_group_arns   = [var.tg_blue_arn]
+  health_check_type   = "EC2"
 
   launch_template {
     id      = aws_launch_template.blue.id
@@ -106,17 +106,23 @@ resource "aws_autoscaling_group" "blue" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes = [
+      name,
+      name_prefix,
+      target_group_arns,
+      tag,
+      traffic_source
+    ]
   }
-
+  tag {
+    key                 = "id"
+    value               = "app-asg"
+    propagate_at_launch = true
+  }
   tag {
     key                 = "Name"
     value               = "blue-ec2-${var.environment}"
     propagate_at_launch = true
   }
-}
-
-resource "aws_autoscaling_attachment" "blue_asg_tg" {
-  autoscaling_group_name = aws_autoscaling_group.blue.name
-  lb_target_group_arn    = var.tg_blue_arn
 }
 
