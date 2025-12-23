@@ -3,18 +3,15 @@ set -euo pipefail
 
 TF_ASG_RESOURCE="module.asg.aws_autoscaling_group.blue"
 
-echo "==== Rebinding Terraform ASG state to latest CodeDeploy ASG ===="
+echo "Rebinding Terraform ASG state to latest CodeDeploy ASG"
 
-# ------------------------------------------
-# STEP 1: Always remove ASG from Terraform state
-# (even if it doesn't exist anymore in AWS)
-# ------------------------------------------
+# Always removes ASG from Terraform state
+
 echo "Removing any existing ASG from Terraform state..."
 terraform state rm "$TF_ASG_RESOURCE" >/dev/null 2>&1 || true
 
-# ------------------------------------------
-# STEP 2: Discover latest CodeDeploy-created ASG
-# ------------------------------------------
+# Discovering latest CodeDeploy-created ASG
+
 echo "Discovering latest CodeDeploy ASG..."
 
 ACTIVE_ASG=$(aws autoscaling describe-auto-scaling-groups \
@@ -22,21 +19,21 @@ ACTIVE_ASG=$(aws autoscaling describe-auto-scaling-groups \
   --output text)
 
 if [[ -z "$ACTIVE_ASG" || "$ACTIVE_ASG" == "None" ]]; then
-  echo "❌ No CodeDeploy ASG found. Aborting."
+  echo "No CodeDeploy ASG found. Aborting."
   exit 1
 fi
 
-echo "✔ Latest ASG detected: $ACTIVE_ASG"
+echo "Latest ASG detected: $ACTIVE_ASG"
 
-# ------------------------------------------
-# STEP 3: Import latest ASG into Terraform state
-# ------------------------------------------
+
+# Importing latest ASG into Terraform state
+
 echo "Importing ASG into Terraform state..."
 terraform import "$TF_ASG_RESOURCE" "$ACTIVE_ASG"
 
-# ------------------------------------------
-# STEP 4: Final refresh (safe now)
-# ------------------------------------------
+
+# Final refresh 
+
 echo "Refreshing Terraform state..."
 terraform refresh -input=false
 

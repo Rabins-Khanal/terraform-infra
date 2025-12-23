@@ -41,7 +41,6 @@ resource "aws_instance" "ec2" {
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true
   key_name                    = var.key_name
-  user_data                   = file("${path.module}/userdata.sh")
 
   tags = merge(var.tags, {
     Name = "terraformrnd-ec2-${var.environment}"

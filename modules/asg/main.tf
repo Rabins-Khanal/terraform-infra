@@ -57,8 +57,6 @@ resource "aws_launch_template" "blue" {
     name = var.ec2_instance_profile
   }
 
-  user_data = base64encode(file(var.user_data_file))
-
   network_interfaces {
     security_groups = [aws_security_group.asg_sg.id]
   }
