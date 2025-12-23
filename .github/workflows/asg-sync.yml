@@ -36,3 +36,17 @@ jobs:
         run: |
           chmod +x ./sync-asg-state.sh
           ./sync-asg-state.sh
+          
+      - name: Terraform Init
+        working-directory: envs/${{ env.ENV }}
+        run: terraform init -input=false
+
+      # Terraform Plan
+      - name: Terraform Plan
+        working-directory: envs/${{ env.ENV }}
+        run: terraform plan -out=tfplan
+
+      # Terraform Apply
+      - name: Terraform Apply
+        working-directory: envs/${{ env.ENV }}
+        run: terraform apply -auto-approve tfplan
