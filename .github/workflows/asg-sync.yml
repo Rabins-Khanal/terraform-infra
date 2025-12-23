@@ -30,17 +30,16 @@ jobs:
 
       - name: Set environment variable
         run: echo "ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
-
+          
+      - name: Terraform Init
+        working-directory: envs/${{ env.ENV }}
+        run: terraform init -input=false
+        
       - name: Sync ASG state
         working-directory: envs/${{ env.ENV }}
         run: |
           chmod +x ./sync-asg-state.sh
           ./sync-asg-state.sh
-          
-      - name: Terraform Init
-        working-directory: envs/${{ env.ENV }}
-        run: terraform init -input=false
-
       # Terraform Plan
       - name: Terraform Plan
         working-directory: envs/${{ env.ENV }}
