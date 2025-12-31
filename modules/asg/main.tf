@@ -47,7 +47,7 @@ locals {
 
 ##########################
 # Launch Templates
-##########################
+#########################
 resource "aws_launch_template" "blue" {
   name_prefix   = "lt-blue-${var.environment}"
   image_id      = var.ami_id
