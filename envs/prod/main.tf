@@ -49,9 +49,9 @@ module "codedeploy" {
   environment = var.environment
   tags        = local.tags
 
-  artifact_bucket_name  = "wordpress-artifact-${var.environment}"
-  codedeploy_app_name   = "wordpress-app-${var.environment}"
-  
+  artifact_bucket_name = "wordpress-artifact-${var.environment}"
+  codedeploy_app_name  = "wordpress-app-${var.environment}"
+
 
   asg_blue_name          = module.asg.asg_blue_name
   tg_blue_name           = module.alb.tg_blue_name
